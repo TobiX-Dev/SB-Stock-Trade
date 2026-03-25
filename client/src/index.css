@@ -1,0 +1,47 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  * { box-sizing: border-box; }
+  body {
+    background-color: #080c14;
+    color: #e2e8f0;
+    font-family: 'DM Sans', sans-serif;
+    -webkit-font-smoothing: antialiased;
+  }
+  ::-webkit-scrollbar { width: 4px; height: 4px; }
+  ::-webkit-scrollbar-track { background: #0d1220; }
+  ::-webkit-scrollbar-thumb { background: #1a2235; border-radius: 2px; }
+  ::-webkit-scrollbar-thumb:hover { background: #00d4aa44; }
+}
+
+@layer components {
+  .card {
+    @apply bg-night-200 border border-night-300 rounded-xl p-5;
+  }
+  .btn-primary {
+    @apply bg-teal text-night font-semibold font-sans px-5 py-2.5 rounded-lg
+           hover:bg-teal-dark transition-all duration-200 active:scale-95 disabled:opacity-50;
+  }
+  .btn-danger {
+    @apply bg-crimson text-white font-semibold font-sans px-5 py-2.5 rounded-lg
+           hover:bg-red-600 transition-all duration-200 active:scale-95 disabled:opacity-50;
+  }
+  .btn-ghost {
+    @apply border border-night-300 text-slate-400 font-sans px-5 py-2.5 rounded-lg
+           hover:border-teal hover:text-teal transition-all duration-200;
+  }
+  .input {
+    @apply w-full bg-night-300 border border-night-300 text-slate-200 rounded-lg px-4 py-2.5
+           font-sans text-sm placeholder-slate-600 outline-none
+           focus:border-teal focus:ring-1 focus:ring-teal transition-all;
+  }
+  .label { @apply block text-xs font-medium text-slate-500 uppercase tracking-wider mb-1.5; }
+  .up   { @apply text-teal; }
+  .down { @apply text-crimson; }
+  .badge-buy  { @apply inline-flex items-center px-2 py-0.5 rounded text-xs font-mono font-medium bg-teal-dim text-teal; }
+  .badge-sell { @apply inline-flex items-center px-2 py-0.5 rounded text-xs font-mono font-medium bg-crimson-dim text-crimson; }
+  .stat-card  { @apply card flex flex-col gap-1; }
+  .table-row  { @apply border-b border-night-300 hover:bg-night-300 transition-colors duration-150; }
+}
