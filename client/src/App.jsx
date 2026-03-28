@@ -4,6 +4,7 @@ import Navbar from './components/Navbar';
 import Landing from './pages/Landing';
 import Login from './components/Login';
 import Register from './components/Register';
+import SetUsernameSetup from './pages/SetUsernameSetup';
 import Home from './pages/Home';
 import StocksPage from './pages/Stocks';
 import StockChart from './pages/StockChart';
@@ -11,6 +12,8 @@ import Portfolio from './pages/Portfolio';
 import History from './pages/History';
 import Profile from './pages/Profile';
 import Admin from './pages/Admin';
+import AdminBonus from './pages/AdminBonus';
+import AdminFeedback from './pages/AdminFeedback';
 import { AllOrders, AllTransactions, Users, AdminStockChart } from './pages/AdminPages';
 
 const Private = ({ children }) => {
@@ -36,6 +39,7 @@ export default function App() {
         <Route path="/"         element={user ? <Navigate to="/home" /> : <Landing />} />
         <Route path="/login"    element={user ? <Navigate to="/home" /> : <Login />} />
         <Route path="/register" element={user ? <Navigate to="/home" /> : <Register />} />
+        <Route path="/set-username" element={<SetUsernameSetup />} />
 
         {/* Protected User Routes */}
         <Route path="/home"        element={<Private><Home /></Private>} />
@@ -51,6 +55,8 @@ export default function App() {
         <Route path="/admin/transactions"element={<AdminRoute><AllTransactions /></AdminRoute>} />
         <Route path="/admin/users"       element={<AdminRoute><Users /></AdminRoute>} />
         <Route path="/admin/stocks"      element={<AdminRoute><AdminStockChart /></AdminRoute>} />
+        <Route path="/admin/feedback"    element={<AdminRoute><AdminFeedback /></AdminRoute>} />
+        <Route path="/admin/bonus"       element={<AdminRoute><AdminBonus /></AdminRoute>} />
 
         {/* Fallback */}
         <Route path="*" element={<Navigate to="/" />} />

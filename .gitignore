@@ -1,19 +1,7 @@
-# Dependencies
-node_modules/
-*/node_modules/
-
-# Environment files
+﻿node_modules/
 .env
-server/.env
-
-# Build
-client/dist/
-client/build/
-
-# Logs
+.env.local
+dist/
+build/
 *.log
-npm-debug.log*
-
-# OS
 .DS_Store
-Thumbs.db

@@ -1,9 +1,10 @@
 import { useState, useEffect } from 'react';
 import { toast } from 'react-toastify';
 import axiosInstance from '../components/axiosInstance';
+import StockSearchModal from '../components/StockSearchModal';
 import { useGeneral } from '../context/GeneralContext';
 
-const TABS = ['Overview', 'Users', 'Stocks', 'Transactions', 'Orders'];
+const TABS = ['Overview', 'Users', 'Stocks', 'Transactions', 'Orders', 'Feedback', 'Bonus'];
 
 export default function Admin() {
   const { fetchStocks } = useGeneral();
@@ -16,6 +17,7 @@ export default function Admin() {
   const [loading, setLoading]   = useState(true);
   const [newStock, setNewStock] = useState({ symbol: '', companyName: '', exchange: 'NASDAQ', sector: 'Technology' });
   const [addLoading, setAddLoading] = useState(false);
+  const [showStockSearch, setShowStockSearch] = useState(false);
 
   useEffect(() => { loadAll(); }, []);
 
@@ -133,9 +135,14 @@ export default function Admin() {
         {/* Tab: Stocks */}
         {tab === 'Stocks' && (
           <div className="space-y-5 animate-fade-in">
+            {/* Search Button */}
+            <button onClick={() => setShowStockSearch(true)} className="btn-primary">
+              🔍 Search & Add Stocks from Finnhub
+            </button>
+
             {/* Add stock form */}
             <div className="card">
-              <h3 className="font-display text-white font-semibold mb-4">Add New Stock</h3>
+              <h3 className="font-display text-white font-semibold mb-4">Add New Stock Manually</h3>
               <form onSubmit={addStock} className="grid sm:grid-cols-2 lg:grid-cols-4 gap-3">
                 <div>
                   <label className="label">Symbol *</label>
@@ -258,6 +265,27 @@ export default function Admin() {
           </div>
         )}
 
+        {/* Tab: Feedback */}
+        {tab === 'Feedback' && (
+          <div className="animate-fade-in">
+            <div className="mb-4">
+              <a href="/admin/feedback" className="inline-block bg-teal hover:bg-teal-dim px-4 py-2 rounded text-night font-semibold transition">
+                Go to Feedback Dashboard →
+              </a>
+            </div>
+          </div>
+        )}
+
+        {tab === 'Bonus' && (
+          <div className="animate-fade-in">
+            <div className="mb-4">
+              <a href="/admin/bonus" className="inline-block bg-teal hover:bg-teal-dim px-4 py-2 rounded text-night font-semibold transition">
+                Go to Bonus Management →
+              </a>
+            </div>
+          </div>
+        )}
+
         {/* Tab: Overview */}
         {tab === 'Overview' && (
           <div className="grid lg:grid-cols-2 gap-5 animate-fade-in">
@@ -297,6 +325,16 @@ export default function Admin() {
           </div>
         )}
       </div>
+
+      {/* Stock Search Modal */}
+      <StockSearchModal 
+        isOpen={showStockSearch} 
+        onClose={() => setShowStockSearch(false)}
+        onAddStock={() => {
+          loadStocks();
+          fetchStocks();
+        }}
+      />
     </div>
   );
 }

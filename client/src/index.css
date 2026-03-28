@@ -45,3 +45,47 @@
   .stat-card  { @apply card flex flex-col gap-1; }
   .table-row  { @apply border-b border-night-300 hover:bg-night-300 transition-colors duration-150; }
 }
+
+/* Google Sign-In Button Styling */
+#google-signin-btn {
+  display: flex !important;
+  justify-content: center !important;
+}
+
+#google-signin-btn > div {
+  transform: scale(1.2) !important;
+}
+
+/* Override Google button styles to match teal theme */
+.gsi-button {
+  background-color: #00d4aa !important;
+  border-color: #00d4aa !important;
+  color: #080c14 !important;
+  border-radius: 8px !important;
+  font-weight: 600 !important;
+  font-family: 'DM Sans', sans-serif !important;
+  padding: 10px 24px !important;
+  border: 2px solid #00d4aa !important;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.gsi-button:hover {
+  background-color: #00b89a !important;
+  border-color: #00b89a !important;
+  box-shadow: 0 0 16px rgba(0, 212, 170, 0.3) !important;
+}
+
+.gsi-button:active {
+  transform: scale(0.98) !important;
+}
+
+#google-register-btn {
+  display: flex !important;
+  justify-content: center !important;
+}
+
+#google-register-btn > div {
+  transform: scale(1.2) !important;
+}
+

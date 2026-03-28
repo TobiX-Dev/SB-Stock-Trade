@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import axiosInstance from '../components/axiosInstance';
+import FeedbackModal from '../components/FeedbackModal';
 import { useGeneral } from '../context/GeneralContext';
 
 const WATCHLIST = ['AAPL','MSFT','GOOGL','AMZN','TSLA','NVDA','META','NFLX'];
@@ -59,6 +60,7 @@ export default function Home() {
 
   return (
     <div className="pt-14 min-h-screen bg-night">
+      <FeedbackModal />
       <div className="max-w-7xl mx-auto px-4 sm:px-6 py-8">
         {/* Header */}
         <div className="mb-8 animate-fade-in">

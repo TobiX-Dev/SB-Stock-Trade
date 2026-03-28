@@ -7,7 +7,14 @@ dotenv.config();
 connectDB();
 
 const app = express();
-app.use(cors({ origin: 'http://localhost:5173', credentials: true }));
+app.use(cors({ 
+  origin: [
+    'http://localhost:5173',
+    'http://localhost:3000',
+    'https://webstock-client.vercel.app'
+  ], 
+  credentials: true 
+}));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
@@ -15,6 +22,7 @@ app.use('/api/users',        require('./routes/userRoute'));
 app.use('/api/stocks',       require('./routes/stockRoute'));
 app.use('/api/transactions', require('./routes/transactionRoute'));
 app.use('/api/orders',       require('./routes/orderRoute'));
+app.use('/api/feedback',     require('./routes/feedbackRoute'));
 
 app.get('/', (req, res) => res.json({ status: 'SB Stocks API running ✅' }));
 
@@ -100,16 +108,21 @@ const seedData = async () => {
     console.log(`✅ ${count} stocks already in DB`);
   }
 
-  // Seed admin
-  const adminExists = await User.findOne({ email: 'admin@sbstocks.com' });
+  // Seed admin - delete old and create new
+  await User.deleteOne({ email: 'admin@sbstocks.com' });
+  const adminExists = await User.findOne({ email: 'charpachi04@gmail.com' });
   if (!adminExists) {
     const salt   = await bcrypt.genSalt(10);
-    const hashed = await bcrypt.hash('Admin@123', salt);
+    const hashed = await bcrypt.hash('Admin123', salt);
     await User.create({
-      username: 'admin', email: 'admin@sbstocks.com',
-      password: hashed, role: 'admin', balance: 999999999,
+      username: 'admin', email: 'charpachi04@gmail.com',
+      password: hashed, role: 'admin', balance: 999999999, isVerified: true,
     });
-    console.log('✅ Admin seeded → admin@sbstocks.com / Admin@123');
+    console.log('✅ Admin seeded → charpachi04@gmail.com / Admin123');
+  } else {
+    const salt   = await bcrypt.genSalt(10);
+    const hashed = await bcrypt.hash('Admin123', salt);
+    await User.updateOne({ email: 'charpachi04@gmail.com' }, { password: hashed });
   }
 };
 

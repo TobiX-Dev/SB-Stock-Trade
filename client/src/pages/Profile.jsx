@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { toast } from 'react-toastify';
 import axiosInstance from '../components/axiosInstance';
 import { useGeneral } from '../context/GeneralContext';
+import TOTPSetup from '../components/TOTPSetup';
 
 export default function Profile() {
   const { user, login } = useGeneral();
@@ -119,12 +120,17 @@ export default function Profile() {
 
         {/* Security info */}
         <div className="card border-night-300">
-          <h3 className="font-display text-white font-semibold mb-3 text-sm">Security & Platform</h3>
-          <div className="space-y-2 text-sm text-slate-500">
-            <p>🔒 Your password is securely hashed with bcrypt</p>
-            <p>🪙 Virtual funds — no real money involved</p>
-            <p>📊 All trades use live Finnhub market data</p>
-            <p>🔑 Sessions managed with secure JWT tokens</p>
+          <h3 className="font-display text-white font-semibold mb-4 text-sm">Security & Platform</h3>
+          <div className="space-y-3">
+            <div>
+              <TOTPSetup />
+            </div>
+            <div className="space-y-2 text-sm text-slate-500 mt-4">
+              <p>🔒 Your password is securely hashed with bcrypt</p>
+              <p>🪙 Virtual funds — no real money involved</p>
+              <p>📊 All trades use live Finnhub market data</p>
+              <p>🔑 Sessions managed with secure JWT tokens</p>
+            </div>
           </div>
         </div>
       </div>

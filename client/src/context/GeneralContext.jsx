@@ -8,14 +8,38 @@ export const GeneralProvider = ({ children }) => {
   const [stocks, setStocks] = useState([]);
   const [loading, setLoading] = useState(false);
 
-  const login = (userData) => {
-    setUser(userData);
-    localStorage.setItem('sbUser', JSON.stringify(userData));
+  const login = async (userData, token) => {
+    try {
+      // Extract token from userData if it exists
+      if (userData?.token) {
+        token = userData.token;
+      }
+      
+      // Extract user object from userData if it's nested
+      let userObj = userData?.user || userData;
+      
+      // If we have a token but no username, fetch the user profile
+      if (token && !userObj?.username) {
+        const { data } = await axiosInstance.get('/users/profile');
+        userObj = data;
+      }
+      
+      // Store token and user
+      if (token) {
+        localStorage.setItem('authToken', token);
+      }
+      
+      setUser(userObj);
+      localStorage.setItem('sbUser', JSON.stringify(userObj));
+    } catch (err) {
+      console.error('Login error:', err.message);
+    }
   };
 
   const logout = () => {
     setUser(null);
     localStorage.removeItem('sbUser');
+    localStorage.removeItem('authToken');
   };
 
   const refreshUser = async () => {

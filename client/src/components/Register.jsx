@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import axiosInstance from '../components/axiosInstance';
@@ -7,26 +7,90 @@ import { useGeneral } from '../context/GeneralContext';
 export default function Register() {
   const { login } = useGeneral();
   const navigate = useNavigate();
-  const [form, setForm] = useState({ username: '', email: '', password: '', confirmPassword: '', phone: '' });
+  const [form, setForm] = useState({ firstName: '', lastName: '', username: '', email: '', password: '', confirmPassword: '', phone: '' });
   const [loading, setLoading] = useState(false);
+  const [showOTPModal, setShowOTPModal] = useState(false);
+  const [otpCode, setOtpCode] = useState('');
+  const [registeredEmail, setRegisteredEmail] = useState('');
+
+  useEffect(() => {
+    // Initialize Google Sign-In
+    if (window.google) {
+      window.google.accounts.id.initialize({
+        client_id: import.meta.env.VITE_GOOGLE_CLIENT_ID,
+        callback: handleGoogleSuccess
+      });
+    }
+  }, []);
 
   const handleChange = (e) => setForm({ ...form, [e.target.name]: e.target.value });
 
+  const handleGoogleSuccess = async (response) => {
+    try {
+      setLoading(true);
+      const { data } = await axiosInstance.post('/users/google-auth', { idToken: response.credential });
+      
+      // If username setup is required, navigate to setup page
+      if (data.requiresUsernameSetup) {
+        navigate('/set-username', { 
+          state: { 
+            userId: data.userId, 
+            email: data.email,
+            firstName: data.firstName,
+            lastName: data.lastName
+          } 
+        });
+        toast.info('Please complete your profile setup');
+      } else {
+        // Existing user, log in directly
+        login(data);
+        toast.success('Google login successful!');
+        navigate('/home');
+      }
+    } catch (err) {
+      toast.error(err.response?.data?.message || 'Google sign-up failed');
+    } finally {
+      setLoading(false);
+    }
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (!form.username || !form.email || !form.password) return toast.error('Fill all required fields');
+    if (!form.firstName || !form.lastName || !form.username || !form.email || !form.password) 
+      return toast.error('Fill all required fields');
     if (form.password.length < 6) return toast.error('Password must be at least 6 characters');
     if (form.password !== form.confirmPassword) return toast.error('Passwords do not match');
     try {
       setLoading(true);
       const { data } = await axiosInstance.post('/users/register', {
-        username: form.username, email: form.email, password: form.password, phone: form.phone
+        firstName: form.firstName,
+        lastName: form.lastName,
+        username: form.username, 
+        email: form.email, 
+        password: form.password, 
+        phone: form.phone
       });
-      login(data);
-      toast.success('Account created! $100,000 virtual funds added 🎉');
-      navigate('/home');
+      setRegisteredEmail(form.email);
+      setShowOTPModal(true);
+      setOtpCode('');
+      toast.success('Verification code sent to your email!');
     } catch (err) {
       toast.error(err.response?.data?.message || 'Registration failed');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleOTPVerify = async () => {
+    if (!otpCode) return toast.error('Enter the 6-digit code');
+    try {
+      setLoading(true);
+      const { data } = await axiosInstance.post('/users/verify-email', { email: registeredEmail, code: otpCode });
+      login(data);
+      toast.success('Email verified! Account created 🎉');
+      navigate('/home');
+    } catch (err) {
+      toast.error(err.response?.data?.message || 'Invalid code');
     } finally {
       setLoading(false);
     }
@@ -60,6 +124,18 @@ export default function Register() {
           </div>
 
           <form onSubmit={handleSubmit} className="space-y-4">
+            <div className="grid grid-cols-2 gap-3">
+              <div>
+                <label className="label">First Name <span className="text-crimson">*</span></label>
+                <input name="firstName" value={form.firstName} onChange={handleChange}
+                  placeholder="John" className="input text-sm" />
+              </div>
+              <div>
+                <label className="label">Last Name <span className="text-crimson">*</span></label>
+                <input name="lastName" value={form.lastName} onChange={handleChange}
+                  placeholder="Doe" className="input text-sm" />
+              </div>
+            </div>
             <div>
               <label className="label">Username <span className="text-crimson">*</span></label>
               <input name="username" value={form.username} onChange={handleChange}
@@ -86,10 +162,20 @@ export default function Register() {
                 placeholder="Repeat password" className="input" />
             </div>
 
-            <button type="submit" disabled={loading} className="btn-primary w-full mt-2">
+            <button type="submit" disabled={loading} className="btn-primary w-full">
               {loading ? 'Creating Account...' : 'Create Account & Start Trading →'}
             </button>
           </form>
+
+          <div className="my-5 flex items-center gap-3">
+            <div className="h-px flex-1 bg-night-300"></div>
+            <span className="text-xs text-slate-500">or</span>
+            <div className="h-px flex-1 bg-night-300"></div>
+          </div>
+
+          <button onClick={() => window.google?.accounts.id.prompt()} className="btn-primary w-full">
+            Sign up with Google 🔐
+          </button>
 
           <p className="text-center text-sm text-slate-500 mt-5">
             Already have an account?{' '}
@@ -97,6 +183,24 @@ export default function Register() {
           </p>
         </div>
       </div>
+
+      {/* OTP Verification Modal */}
+      {showOTPModal && (
+        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 px-4">
+          <div className="bg-night-300 rounded-2xl border border-night-300 p-6 w-full max-w-md">
+            <h2 className="text-xl font-bold text-white mb-2">Verify Your Email</h2>
+            <p className="text-sm text-slate-500 mb-4">Enter the 6-digit code we sent to <br/><span className="text-teal">{registeredEmail}</span></p>
+            <input type="text" value={otpCode} onChange={(e) => setOtpCode(e.target.value.slice(0, 6))} 
+              placeholder="000000" className="input w-full text-center text-2xl tracking-widest mb-4" maxLength="6" />
+            <button onClick={handleOTPVerify} disabled={loading} className="btn-primary w-full mb-3">
+              {loading ? 'Verifying...' : 'Verify Code'}
+            </button>
+            <button onClick={() => setShowOTPModal(false)} className="w-full text-slate-500 hover:text-white text-sm">
+              Cancel
+            </button>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

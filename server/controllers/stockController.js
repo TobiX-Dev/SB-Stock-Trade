@@ -221,8 +221,8 @@ const getMarketNews = async (req, res) => {
 const getBulkQuotes = async (req, res) => {
   const { symbols } = req.query;
   if (!symbols) return res.json([]);
-  const list = symbols.split(',').slice(0, 25).map(s => s.trim()).filter(Boolean);
-  if (!list.length) return res.json([]);
+  const MAX_BULK_SYMBOLS = 50;
+  const list = symbols.split(',').map(s => s.trim()).filter(Boolean).slice(0, MAX_BULK_SYMBOLS);  if (!list.length) return res.json([]);
 
   // Check cache first
   const cacheKey = `bulk_${list.join('_')}`;
@@ -302,8 +302,43 @@ const deleteStock = async (req, res) => {
   }
 };
 
+const searchFinnhub = async (req, res) => {
+  try {
+    const { query } = req.body;
+    if (!query || query.length < 1) return res.json({ results: [] });
+
+    // Search via Finnhub Symbol Lookup
+    const url = `${FH_BASE}/search?q=${encodeURIComponent(query)}&token=${FH()}`;
+    const { data } = await axios.get(url, { timeout: 8000 });
+    
+    if (!data.result) return res.json({ results: [] });
+
+    // Filter and format results (prefer stocks over other securities)
+    const results = data.result
+      .filter(item => 
+        item.type === 'Common Stock' && 
+        item.symbol && 
+        item.description
+      )
+      .slice(0, 20) // Limit to 20 results
+      .map(item => ({
+        symbol: item.symbol,
+        description: item.description,
+        exchange: item.displaySymbol,
+        mic: item.mic || 'NASDAQ',
+        sector: item.subindustry || 'Technology',
+        logo: item.logo || ''
+      }));
+
+    res.json({ results });
+  } catch (error) {
+    console.error('Finnhub search error:', error.message);
+    res.status(500).json({ message: 'Failed to search stocks' });
+  }
+};
+
 module.exports = {
   getAllStocks, getStockQuote, getStockCandles, searchStocks,
   getCompanyProfile, getMarketNews, getBulkQuotes,
-  addStock, updateStock, deleteStock
+  addStock, updateStock, deleteStock, searchFinnhub
 };
