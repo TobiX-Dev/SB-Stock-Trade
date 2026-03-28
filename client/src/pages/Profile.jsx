@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { toast } from 'react-toastify';
 import axiosInstance from '../components/axiosInstance';
 import { useGeneral } from '../context/GeneralContext';
-import TOTPSetup from '../components/TOTPSetup';
+import TotpSetup from '../components/TotpSetup';
 
 export default function Profile() {
   const { user, login } = useGeneral();
@@ -123,7 +123,7 @@ export default function Profile() {
           <h3 className="font-display text-white font-semibold mb-4 text-sm">Security & Platform</h3>
           <div className="space-y-3">
             <div>
-              <TOTPSetup />
+              <TotpSetup />
             </div>
             <div className="space-y-2 text-sm text-slate-500 mt-4">
               <p>🔒 Your password is securely hashed with bcrypt</p>
