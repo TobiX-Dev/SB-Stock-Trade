@@ -1,316 +1,264 @@
-# 📈 SB Stocks — Paper Trading Platform
+# 📈 SB Stocks - Advanced Trading Platform
 
-A full-stack MERN (MongoDB, Express, React, Node.js) paper trading simulation platform with **real-time US stock market data** via Finnhub API.
+<div align="center">
 
----
+![Stock Trading](https://img.shields.io/badge/Type-Stock%20Trading%20Platform-blue?style=for-the-badge)
+![Status](https://img.shields.io/badge/Status-Active-brightgreen?style=for-the-badge)
+![License](https://img.shields.io/badge/License-MIT-green?style=for-the-badge)
 
-## 🚀 Features
+**A modern, full-stack stock trading platform with real-time market data, admin dashboard, and intelligent portfolio management.**
 
-| Feature | Description |
-|---|---|
-| 🔐 **Auth** | JWT-based secure registration & login |
-| 💰 **Virtual Funds** | $100,000 starting balance per user |
-| 📡 **Real-Time Quotes** | Live prices via Finnhub API |
-| 📊 **Charts** | Interactive OHLCV candlestick price charts |
-| 💼 **Portfolio** | Holdings tracker with P&L, allocation donut chart |
-| 📋 **History** | Full buy/sell transaction log |
-| 📰 **Market News** | Live financial news feed |
-| 🔍 **Stock Search** | Search 10,000+ US-listed stocks |
-| 👤 **Profile** | Edit account, view stats |
-| ★ **Admin Panel** | Manage users, stocks, view all transactions |
+[Features](#-features) • [Tech Stack](#-tech-stack) • [Getting Started](#-getting-started) • [Deployment](#-deployment) • [API Endpoints](#-api-endpoints)
+
+</div>
 
 ---
 
-## 🗂 Project Structure
+## ✨ Features
 
-```
-SB-Stocks/
-├── server/                  # Node.js + Express Backend
-│   ├── config/
-│   │   └── db.js            # MongoDB connection
-│   ├── controllers/
-│   │   ├── userController.js
-│   │   ├── stockController.js
-│   │   ├── transactionController.js
-│   │   └── orderController.js
-│   ├── middlewares/
-│   │   └── authMiddleware.js # JWT protect + adminOnly
-│   ├── models/
-│   │   ├── userModel.js
-│   │   ├── stockSchema.js
-│   │   ├── transactionModel.js
-│   │   ├── orderSchema.js
-│   │   └── portfolioModel.js
-│   ├── routes/
-│   │   ├── userRoute.js
-│   │   ├── stockRoute.js
-│   │   ├── transactionRoute.js
-│   │   └── orderRoute.js
-│   ├── .env                 # ← YOU MUST CONFIGURE THIS
-│   ├── index.js             # Server entry point + seeding
-│   └── package.json
-│
-└── client/                  # React + Vite + Tailwind Frontend
-    ├── src/
-    │   ├── components/
-    │   │   ├── axiosInstance.js
-    │   │   ├── Login.jsx
-    │   │   ├── Navbar.jsx
-    │   │   └── Register.jsx
-    │   ├── context/
-    │   │   └── GeneralContext.jsx
-    │   ├── pages/
-    │   │   ├── Landing.jsx
-    │   │   ├── Home.jsx        # Dashboard
-    │   │   ├── Stocks.jsx      # Market listing
-    │   │   ├── StockChart.jsx  # Stock detail + trade
-    │   │   ├── Portfolio.jsx
-    │   │   ├── History.jsx
-    │   │   ├── Profile.jsx
-    │   │   ├── Admin.jsx
-    │   │   └── AdminPages.jsx
-    │   ├── App.jsx
-    │   └── main.jsx
-    ├── index.html
-    ├── package.json
-    ├── vite.config.js
-    └── tailwind.config.js
+### 🔐 **Authentication & Security**
+- ✅ Google OAuth 2.0 integration for seamless signup
+- ✅ JWT-based authentication with secure token management
+- ✅ Two-Factor Authentication (TOTP) for enhanced security
+- ✅ Email verification for new accounts
+- ✅ Password hashing with bcrypt
+
+### 📊 **Trading Features**
+- ✅ Real-time stock search powered by Finnhub API
+- ✅ Buy/Sell stocks with instant portfolio updates
+- ✅ Interactive stock charts and price analytics
+- ✅ Transaction history with detailed logs
+- ✅ Auto-calculated portfolio balance and returns
+
+### 👨‍💼 **Admin Dashboard**
+- ✅ Comprehensive admin control panel
+- ✅ User management with search & filter
+- ✅ Stock inventory management with Finnhub integration
+- ✅ Order tracking and verification
+- ✅ Transaction monitoring
+- ✅ Customer feedback system with responses
+- ✅ Bonus fund allocation for users
+
+### 💬 **Customer Support**
+- ✅ Floating feedback button on home page
+- ✅ Customer issue submission with contact info
+- ✅ Admin feedback dashboard for issue resolution
+- ✅ Status tracking (Open, In-Progress, Resolved)
+
+---
+
+## 🛠️ Tech Stack
+
+
+---
+
+## 🚀 Getting Started
+
+### **Prerequisites**
+- Node.js (v14+)
+- npm or yarn
+- MongoDB Atlas account
+- Finnhub API key
+- Google OAuth credentials
+
+### **Installation**
+
+1. **Clone the repository**
+```bash
+git clone https://github.com/TobiX-Dev/SB-Stock-Trade.git
+cd SB-Stock-Trade
 ```
 
----
+2. **Setup Backend**
+```bash
+cd server
+npm install
+cp .env.example .env
+# Edit .env with your credentials
+npm start
+```
 
-## ⚙️ Prerequisites
+3. **Setup Frontend**
+```bash
+cd ../client
+npm install
+npm run dev
+```
 
-| Tool | Version | Download |
-|---|---|---|
-| Node.js | v16+ | https://nodejs.org |
-| MongoDB | v5+ | https://www.mongodb.com/try/download/community |
-| npm | v8+ | Comes with Node.js |
-| Finnhub API Key | Free | https://finnhub.io/register |
+### **Environment Variables**
 
----
-
-## 🔑 Step 1 — Get Your Finnhub API Key
-
-1. Go to **https://finnhub.io/register**
-2. Create a free account
-3. Copy your **API Key** from the dashboard
-4. Free tier includes:
-   - 60 API calls/minute
-   - Real-time US stock quotes
-   - Company profiles, candle data, news
-
----
-
-## 🛠 Step 2 — Configure Environment
-
-Edit `server/.env`:
-
+**Backend (.env)**
 ```env
+MONGODB_URI=mongodb+srv://username:password@cluster.mongodb.net/dbname
+JWT_SECRET=your_jwt_secret_key
+FINNHUB_API_KEY=your_finnhub_key
+GOOGLE_CLIENT_ID=your_google_client_id
+SMTP_EMAIL=your_email@gmail.com
+SMTP_PASSWORD=your_app_password
 PORT=5000
-MONGO_URI=mongodb://localhost:27017/sb-stocks
-JWT_SECRET=sb_stocks_jwt_super_secret_key_2024
-FINNHUB_API_KEY=your_actual_finnhub_key_here
 ```
 
-> ⚠️ Replace `your_actual_finnhub_key_here` with your real Finnhub API key!
-
----
-
-## 📦 Step 3 — Install Dependencies
-
-### Backend
-```bash
-cd SB-Stocks/server
-npm install
-```
-
-### Frontend
-```bash
-cd SB-Stocks/client
-npm install
+**Frontend (.env)**
+```env
+VITE_API_URL=http://localhost:5000/api
+VITE_GOOGLE_CLIENT_ID=your_google_client_id
 ```
 
 ---
 
-## 🗄 Step 4 — Start MongoDB
+## 📱 Usage
 
-### Option A: Local MongoDB
-```bash
-# macOS (Homebrew)
-brew services start mongodb-community
+### **User Flow**
+1. Sign up with Google OAuth or manual registration
+2. Add first name, last name, and set username
+3. Verify email with OTP
+4. Set up 2FA (optional)
+5. Browse stocks and build portfolio
+6. Track transactions and portfolio performance
 
-# Windows
-net start MongoDB
-
-# Linux
-sudo systemctl start mongod
-```
-
-### Option B: MongoDB Atlas (Cloud — Free)
-1. Go to https://www.mongodb.com/atlas
-2. Create free cluster
-3. Get connection string
-4. Replace MONGO_URI in `.env`:
-   ```
-   MONGO_URI=mongodb+srv://username:password@cluster.mongodb.net/sb-stocks
-   ```
+### **Admin Features**
+1. Access admin dashboard at `/admin`
+2. Manage users, stocks, and orders
+3. View customer feedback and respond
+4. Allocate bonus funds to users
+5. Monitor all platform transactions
 
 ---
 
-## ▶️ Step 5 — Run the Application
+## 🌐 API Endpoints
 
-### Terminal 1 — Backend
-```bash
-cd SB-Stocks/server
-npm run dev
+### **Authentication**
+```
+POST   /api/users/register       - Register new user
+POST   /api/users/login          - User login
+POST   /api/users/google-auth    - Google OAuth callback
+POST   /api/users/verify-email   - Verify email with OTP
+POST   /api/users/set-username   - Setup username (post-OAuth)
+POST   /api/users/setup-totp     - Initialize 2FA
+POST   /api/users/verify-totp    - Verify TOTP code
 ```
 
-You should see:
+### **Stocks**
 ```
-🚀 Server running on port 5000
-✅ MongoDB Connected: localhost
-✅ Default stocks seeded
-✅ Admin user seeded → email: admin@sbstocks.com | password: Admin@123
-```
-
-### Terminal 2 — Frontend
-```bash
-cd SB-Stocks/client
-npm run dev
+GET    /api/stocks               - Get all available stocks
+POST   /api/stocks               - Add new stock (admin only)
+POST   /api/stocks/admin/search-finnhub - Search Finnhub API
+GET    /api/stocks/:id           - Get stock details
 ```
 
-Open **http://localhost:5173** in your browser 🎉
-
----
-
-## 👤 Default Credentials
-
-| Role  | Email                  | Password   |
-|-------|------------------------|------------|
-| Admin | admin@sbstocks.com     | Admin@123  |
-
-> Regular users can register at `/register` and get $100,000 virtual funds instantly.
-
----
-
-## 📡 API Endpoints
-
-### Users
-| Method | URL | Auth | Description |
-|--------|-----|------|-------------|
-| POST | /api/users/register | Public | Register new user |
-| POST | /api/users/login | Public | Login |
-| GET  | /api/users/profile | User | Get my profile |
-| PUT  | /api/users/profile | User | Update profile |
-| GET  | /api/users/all | Admin | All users |
-| DELETE | /api/users/:id | Admin | Delete user |
-
-### Stocks
-| Method | URL | Auth | Description |
-|--------|-----|------|-------------|
-| GET | /api/stocks | User | All listed stocks |
-| GET | /api/stocks/search?q= | User | Search Finnhub |
-| GET | /api/stocks/quote/:symbol | User | Live price quote |
-| GET | /api/stocks/candles/:symbol | User | Price chart data |
-| GET | /api/stocks/profile/:symbol | User | Company details |
-| GET | /api/stocks/news | User | Market news |
-| GET | /api/stocks/bulk-quotes?symbols= | User | Multiple quotes |
-| POST | /api/stocks | Admin | Add stock |
-| PUT | /api/stocks/:id | Admin | Update stock |
-| DELETE | /api/stocks/:id | Admin | Remove stock |
-
-### Transactions
-| Method | URL | Auth | Description |
-|--------|-----|------|-------------|
-| POST | /api/transactions/buy | User | Buy stock |
-| POST | /api/transactions/sell | User | Sell stock |
-| GET  | /api/transactions/my | User | My transactions |
-| GET  | /api/transactions/portfolio | User | My portfolio |
-| GET  | /api/transactions/all | Admin | All transactions |
-
-### Orders
-| Method | URL | Auth | Description |
-|--------|-----|------|-------------|
-| GET | /api/orders/my | User | My orders |
-| GET | /api/orders/all | Admin | All orders |
-| GET | /api/orders/stats | Admin | Order statistics |
-
----
-
-## 🎨 Tech Stack
-
-### Backend
-- **Node.js** + **Express.js** — REST API server
-- **MongoDB** + **Mongoose** — Database & ODM
-- **bcryptjs** — Password hashing
-- **jsonwebtoken** — JWT authentication
-- **axios** — HTTP client for Finnhub API
-- **cors**, **dotenv** — CORS & environment config
-
-### Frontend
-- **React 18** + **Vite** — Frontend framework & bundler
-- **Tailwind CSS** — Utility-first styling
-- **React Router v6** — Client-side routing
-- **Chart.js** + **react-chartjs-2** — Stock price charts
-- **Axios** — API calls
-- **React Toastify** — Notifications
-
-### External API
-- **Finnhub** — Real-time stock quotes, candles, company data, news
-
----
-
-## 🔐 Security Features
-
-- Passwords hashed with **bcrypt** (salt rounds: 10)
-- **JWT tokens** with 30-day expiry
-- **Role-based access control** (user vs admin)
-- Protected routes on both frontend and backend
-- Token auto-invalidation on 401 responses
-
----
-
-## 📊 Database Schemas
-
-### User
+### **Trading**
 ```
-{ username, email, password (hashed), phone, balance (default: 100000), role, createdAt }
+POST   /api/orders               - Create buy/sell order
+GET    /api/orders               - Get user orders
+PUT    /api/orders/:id/verify    - Verify order (admin)
 ```
 
-### Stock
+### **Portfolio**
 ```
-{ symbol, companyName, exchange, sector, description, logo, isActive, addedAt }
-```
-
-### Transaction
-```
-{ user (ref), symbol, companyName, type (buy|sell), quantity, price, totalAmount, timestamp }
+GET    /api/portfolio            - Get user portfolio
+GET    /api/transactions         - Get transaction history
 ```
 
-### Order
+### **Admin**
 ```
-{ user (ref), symbol, companyName, orderType, quantity, price, totalAmount, status, createdAt }
-```
-
-### Portfolio
-```
-{ user (ref), name, holdings: [{ symbol, companyName, quantity, avgBuyPrice }], createdAt }
+GET    /api/users/all            - Get all users (admin only)
+PUT    /api/users/:id            - Update user (admin only)
+POST   /api/feedback/submit      - Submit feedback
+GET    /api/feedback/all         - Get all feedback (admin only)
+PUT    /api/feedback/:id         - Respond to feedback (admin only)
 ```
 
 ---
 
-## 🐛 Troubleshooting
+## 📦 Deployment
 
-| Issue | Solution |
-|-------|----------|
-| `MONGO_URI` connection error | Make sure MongoDB is running |
-| Finnhub returns empty data | Check your API key in `.env` |
-| Port 5000 in use | Change `PORT` in `.env` |
-| CORS error | Vite proxy is configured — use `localhost:5173` not `5000` |
-| Charts not loading | Free Finnhub may rate-limit — wait 1 minute |
+### **Vercel (Frontend)**
+
+1. Connect GitHub repository to Vercel
+2. Set environment variables in Vercel dashboard:
+   - `VITE_API_URL` - Backend API URL
+   - `VITE_GOOGLE_CLIENT_ID` - Google OAuth ID
+3. Deploy automatically on push to main
+
+### **Backend Hosting Options**
+- **Render.com** (Recommended - Free tier available)
+- **Railway.app**
+- **Heroku** (Paid)
+- **DigitalOcean**
+
+### **Database**
+- MongoDB Atlas (Cloud - Free tier)
+- Local MongoDB
 
 ---
+
+## 🔒 Security Features
+
+- **HTTPS/SSL** - All connections encrypted
+- **CORS** - Configured for specific domains
+- **Rate Limiting** - API rate limit protection
+- **Input Validation** - Server-side validation on all inputs
+- **SQL Injection Prevention** - Using Mongoose ODM
+- **XSS Protection** - React's built-in XSS prevention
+- **CSRF Tokens** - Implemented for state-changing operations
+
+---
+
+## 🤝 Contributing
+
+Contributions are welcome! Please follow these steps:
+
+1. Fork the repository
+2. Create feature branch (`git checkout -b feature/AmazingFeature`)
+3. Commit changes (`git commit -m 'Add AmazingFeature'`)
+4. Push to branch (`git push origin feature/AmazingFeature`)
+5. Open Pull Request
+
+---
+
+## 📝 License
+
+This project is licensed under the MIT License - see the LICENSE file for details.
+
+---
+
+## 👤 Author
+
+**Darshan Tobi** - Stock Trading Platform Developer
+
+- GitHub: [@TobiX-Dev](https://github.com/TobiX-Dev)
+- Platform: SB Stocks
+
+---
+
+## 📞 Support
+
+For support, feedback, or issues:
+- Use the in-app feedback system 💬
+- Create an issue on GitHub
+- Contact: your-email@gmail.com
+
+---
+
+## 🎯 Roadmap
+
+- [ ] Mobile app (React Native)
+- [ ] Advanced charting (TradingView integration)
+- [ ] Paper trading mode
+- [ ] Social features (follow traders, copy trades)
+- [ ] Cryptocurrency support
+- [ ] Margin trading
+- [ ] API for third-party integrations
+
+---
+
+<div align="center">
+
+**Made with ❤️ by Darshan Tobi**
+
+⭐ If you like this project, please give it a star!
+
+</div>
 
 ## 🚀 Production Deployment
 
