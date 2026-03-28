@@ -12,6 +12,7 @@ app.use(cors({
     'http://localhost:5173',
     'http://localhost:3000',
     'https://webstock-client.vercel.app'
+    'https://sb-stock-trade.onrender.com'
   ], 
   credentials: true 
 }));
