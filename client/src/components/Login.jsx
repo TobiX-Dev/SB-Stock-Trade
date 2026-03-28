@@ -74,7 +74,14 @@ export default function Login() {
         navigate(data.role === 'admin' ? '/admin' : '/home');
       }
     } catch (err) {
-      toast.error(err.response?.data?.message || 'Login failed');
+      const errorMsg = err.response?.data?.message || 'Login failed';
+      // Check if user doesn't exist (Invalid email or password)
+      if (errorMsg.toLowerCase().includes('invalid email') || errorMsg.toLowerCase().includes('invalid email or password')) {
+        toast.error('Account not found! Please register first.');
+        setTimeout(() => navigate('/register'), 1500);
+      } else {
+        toast.error(errorMsg);
+      }
     } finally {
       setLoading(false);
     }
