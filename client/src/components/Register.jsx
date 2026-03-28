@@ -28,10 +28,13 @@ export default function Register() {
   const handleGoogleSuccess = async (response) => {
     try {
       setLoading(true);
+      console.log('🔵 Sending Google token to backend...');
       const { data } = await axiosInstance.post('/users/google-auth', { idToken: response.credential });
+      console.log('✅ Backend response:', data);
       
       // If username setup is required, navigate to setup page
       if (data.requiresUsernameSetup) {
+        console.log('→ Navigating to username setup');
         navigate('/set-username', { 
           state: { 
             userId: data.userId, 
@@ -43,12 +46,15 @@ export default function Register() {
         toast.info('Please complete your profile setup');
       } else {
         // Existing user, log in directly
+        console.log('→ Logging in existing user');
         login(data);
         toast.success('Google login successful!');
         navigate('/home');
       }
     } catch (err) {
-      toast.error(err.response?.data?.message || 'Google sign-up failed');
+      console.error('❌ Error:', err);
+      console.error('Response:', err.response?.data);
+      toast.error(err.response?.data?.message || 'Google sign-up failed. Check console for details.');
     } finally {
       setLoading(false);
     }
