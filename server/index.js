@@ -11,10 +11,11 @@ app.use(cors({
   origin: [
     'http://localhost:5173',
     'http://localhost:3000',
-    'https://webstock-client.vercel.app'
-    'https://sb-stock-trade.onrender.com'
+    process.env.FRONTEND_URL || 'https://sbstocktrade.vercel.app'
   ], 
-  credentials: true 
+  credentials: true, 
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization']
 }));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
