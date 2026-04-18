@@ -224,7 +224,7 @@ This project is licensed under the MIT License - see the LICENSE file for detail
 
 ## 👤 Author
 
-**Darshan Tobi** - Stock Trading Platform Developer
+**DevX Tobi** - Stock Trading Platform Developer
 
 - GitHub: [@TobiX-Dev](https://github.com/TobiX-Dev)
 - Platform: SB Stocks
@@ -254,7 +254,7 @@ For support, feedback, or issues:
 
 <div align="center">
 
-**Made with ❤️ by Darshan Tobi**
+**Made with ❤️ by DevX Tobi**
 
 ⭐ If you like this project, please give it a star!
 
